@@ -1,3 +1,4 @@
+const CryptoJS = require("crypto-js");
 const bcrypt = require("bcryptjs");
 
 const User = require("../../models/User");
@@ -5,11 +6,32 @@ const Setting = require("../../models/Setting");
 const generateToken = require("../../services/tokenService/generateToken");
 
 class AuthController {
+    decryptData = (encryptedData) => {
+        try {
+            const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+
+            const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+            const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+            if (!decrypted) {
+                throw new Error("Decryption failed - data may be corrupted or key mismatched.");
+            }
+
+            return decrypted;
+        } catch (error) {
+            console.error("Decryption error:", error.message);
+            throw error;
+        }
+    };
+    
     registerUser = async (req, res) => {
         try {
-            const { session_key, hashedPassword, session_firstname, session_lastname } = req.body;
+            const session_key = this.decryptData(req.body.session_key);
+            const session_password = this.decryptData(req.body.session_password);
+            const session_firstname = this.decryptData(req.body.session_firstname);
+            const session_lastname = this.decryptData(req.body.session_lastname);
 
-            if (!session_key || !hashedPassword || !session_firstname || !session_lastname) {
+            if (!session_key || !session_password || !session_firstname || !session_lastname) {
                 return res.status(400).json({ message: "All fields are required for registration." });
             }
 
@@ -21,11 +43,10 @@ class AuthController {
 
             const newUser = new User({
                 email: session_key,
-                password: hashedPassword,
+                password: session_password,
                 firstname: session_firstname,
                 lastname: session_lastname,
             })
-
             await newUser.save();
 
             const newUserSetting = new Setting({
@@ -43,8 +64,9 @@ class AuthController {
 
     loginUser = async (req, res) => {
         try {
-            const { session_key, session_password } = req.body;
-
+            const session_key = this.decryptData(req.body.session_key);
+            const session_password = this.decryptData(req.body.session_password);
+            
             // if (!session_key || !session_password) {
             //     return res.status(400).json({ message: "Email and password are required for login." });
             // }

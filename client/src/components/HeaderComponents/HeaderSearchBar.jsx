@@ -1,10 +1,18 @@
+"use client"
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
+import { ArrowLeftIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-import { ArrowLeftIcon, HeaderSearchHistory, SearchIcon } from "@/components";
+import { HeaderSearchHistory } from "@/components";
 import { toggleHeaderSearchHistory } from "@/store/actions/toggle/toggleActions";
 
 const HeaderSearchBar = ({ isSearchShowed, forwardRef }) => {
     const dispatch = useDispatch();
+
+    const variants = {
+        open: { opacity: 1, y: 0 },
+        closed: { opacity: 0, y: "-10%" },
+    }
 
     return (
         <div>
@@ -12,14 +20,14 @@ const HeaderSearchBar = ({ isSearchShowed, forwardRef }) => {
                 <div className="w-full h-full relative before:shadow-md">
                     <div className={`${isSearchShowed ? "shadow-xl" : null} w-full h-full sm:px-[16px] px-[4px] mb-[-8px] flex items-center`}>
                         <div className="w-full flex items-center">
-                            <div className={`${isSearchShowed ? "flex w-[34px] h-[34px] p-[8px]" : "hidden"} items-center justify-center rounded-xl hover:bg-zinc-200 cursor-pointer transition-all duration-500 ease-in-out animate-moveIconRightToLeft`}>
-                                <ArrowLeftIcon fill="none" stroke="currentColor" width={20} height={20}/>
-                            </div>
+                            <motion.div animate={ isSearchShowed ? { x: -4 } : { x: 0 } } transition={{ duration: 0.4 }} className={`${isSearchShowed ? "flex w-[34px] h-[34px] p-[8px]" : "hidden"} items-center justify-center rounded-xl hover:bg-zinc-200 cursor-pointer`}>
+                                <ArrowLeftIcon width={20} height={20}/>
+                            </motion.div>
                             <label className={`${isSearchShowed ? "w-full" : null} h-full min-w-[40px] min-h-[40px] flex items-center justify-center relative rounded-xl bg-zinc-100 z-10`}
                                 htmlFor="headerSearchInput">
-                                <span className={`${isSearchShowed ? "animate-moveIconRightToLeft hidden" : "flex"} w-auto items-center sm:pl-[12px] transition-all duration-500`}>
-                                    <SearchIcon fill="none" stroke="currentColor"/>
-                                </span>
+                                <motion.span animate={ isSearchShowed ? { x: -4 } : { x: 0 } } transition={{ duration: 0.4 }} className={`${isSearchShowed ? "hidden" : "flex"} w-auto items-center sm:pl-[12px]`}>
+                                    <MagnifyingGlassIcon width={20} height={20}/>
+                                </motion.span>
                                 <span className={`${isSearchShowed ? "flex" : "hidden"} w-[22px]`}></span>
                                 <input type="text" name="headerSearchInput" id="headerSearchInput"
                                        ref={forwardRef}
@@ -29,9 +37,9 @@ const HeaderSearchBar = ({ isSearchShowed, forwardRef }) => {
                             </label>
                         </div>
                     </div>
-                    <div ref={forwardRef}>
+                    <motion.div ref={forwardRef} animate={isSearchShowed ? "open" : "closed"} variants={variants} transition={{ duration: 0.4 }}>
                         { isSearchShowed && <HeaderSearchHistory/> }
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@ const HeaderControls = ({ actionProps, isMessageDisabled, isNotificationDisabled
                     <QuickHeaderButton icon={<ChatBubbleInnerOuterIcon/>} forwardRef={actionProps.headerRef.messageButtonRef} toggleAction={actionProps.showMessage} toggleOnClick={() => dispatch(toggleHeaderMessage())}/>
                 ) }
                 <QuickHeaderButton icon={<BellAlertIcon fill="none" stroke="currentColor"/>} forwardRef={actionProps.headerRef.notificationButtonRef} toggleAction={actionProps.showNotification} toggleOnClick={() => dispatch(toggleHeaderNotification())} isLabelShowed={userProps?.notifications?.length} labelContent={notificationUnreadCount}/>
-                <div className="h-full flex items-center justify-center">
+                <div className="flex-center select-none">
                     <div ref={actionProps.headerRef.personalAccountButtonRef} className="w-[40px] h-[40px] relative cursor-pointer"
                          onClick={() => dispatch(toggleHeaderPersonalAccount())}>
                         <div className="w-full h-full rounded-xl overflow-hidden relative">

@@ -10,7 +10,7 @@ const Header = ({ isMessageDisabled, isNotificationDisabled }) => {
     const actionProps = useHeaderInteractions();
 
     return (
-        <nav>
+        <header>
             <div className="h-[56px] top-0 left-0 fixed z-30">
                 <div className="w-full h-full flex flex-row relative">
                     <HeaderLogo isLogoShowed={actionProps.showSearchHistory}/>
@@ -41,7 +41,7 @@ const Header = ({ isMessageDisabled, isNotificationDisabled }) => {
                     { actionProps.showPersonalAccount && <HeaderPersonalAccount forwardedRef={actionProps.headerRef.personalAccountButtonRef}/> }
                 </div>
             </div>
-        </nav>
+        </header>
     );
 };
 

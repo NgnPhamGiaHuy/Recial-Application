@@ -1,4 +1,8 @@
+"use client"
+
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { HeaderMenuSectionItem } from "@/components";
 import { toggleHeaderMenu } from "@/store/actions/toggle/toggleActions";
@@ -9,50 +13,42 @@ import HEADER_MENU_PERSONAL from "@/constants/MenuConstants/MenuPersonal";
 const HeaderMenu = ({ forwardedRef }) => {
     const dispatch = useDispatch();
 
+    const variants = {
+        hidden: { x: "100%", opacity: 0 },
+        exit: { x: "100%", opacity: 0, transition: { duration: 0.3 } },
+        visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 120, damping: 20 } },
+    }
+
     return (
-        <div className="w-screen h-screen mt-[56px] fixed top-0 left-0 bg-black/75 z-50">
-            <div ref={forwardedRef} className={`w-[380px] h-[calc(100vh-56px)] max-w-full max-h-screen absolute top-0 right-0 flex flex-col rounded-xl bg-white shadow-lg border border-solid border-black transform-none overflow-hidden animate-movePanelRightToLeft`}>
-                <div className="flex flex-row py-[8px] pl-[12px] pr-[48px] items-center justify-between text-black font-normal break-words leading-5 relative">
-                    <div className="text-[20px] font-semibold leading-6">
-                        <h1>Menu</h1>
-                    </div>
-                    <div className="w-[32px] h-[32px] absolute top-[8px] right-[8px] flex flex-col items-center justify-center overflow-hidden">
-                        <button type="button" className="w-full h-full flex flex-row items-center justify-center rounded-full hover:bg-zinc-200 transition-all" onClick={() => dispatch(toggleHeaderMenu())}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </div>
+        <div className="fixed inset-0 mt-14 bg-black/75 z-50">
+            <motion.div ref={forwardedRef} variants={variants} initial="hidden" animate="visible" exit="exit"
+                        className="absolute top-0 right-0 w-[380px] max-w-full h-[calc(100vh-56px)] flex flex-col rounded-l-xl bg-white shadow-lg border border-solid border-black overflow-hidden">
+                <div className=" py-2 px-3 pr-12 flex-between text-black">
+                    <h1 className="text-2xl font-semibold leading-6">Menu</h1>
+                    <button type="button" className="absolute top-2 right-2 w-8 h-8 flex-center rounded-full hover:bg-zinc-200 transition-all" onClick={() => dispatch(toggleHeaderMenu())}>
+                        <XMarkIcon width={24} height={24} />
+                    </button>
                 </div>
-                <div className="min-h-[5.6rem] flex flex-col px-[12px] py-[8px] overflow-auto">
-                    <section className="mt-[12px] bg-white border border-solid border-gray-200 rounded-xl overflow-visible relative">
-                        <header className="px-[24px] py-[16px] border-b-[1px] border-solid border-gray-300">
-                            <div className="flex flex-col text-[16px] text-black font-semibold leading-5">
-                                <h2>Social</h2>
-                            </div>
-                        </header>
-                        <ul className="flex flex-row flex-wrap p-[8px]">
-                            { HEADER_MENU_SOCIAL.map((value, index) => (
-                                <HeaderMenuSectionItem key={index} sectionItemData={value}/>
-                            )) }
-                        </ul>
-                    </section>
-                    <section className="mt-[12px] bg-white border border-solid border-gray-200 rounded-xl overflow-visible relative">
-                        <header className="px-[24px] py-[16px] border-b-[1px] border-solid border-gray-300">
-                            <div className="flex flex-col text-[16px] text-black font-semibold leading-5">
-                                <h2>Personal</h2>
-                            </div>
-                        </header>
-                        <ul className="flex flex-row flex-wrap p-[8px]">
-                            { HEADER_MENU_PERSONAL.map((value, index) => (
-                                <HeaderMenuSectionItem key={index} sectionItemData={value}/>
-                            )) }
-                        </ul>
-                    </section>
+                <div className="flex flex-col flex-grow px-3 py-2 overflow-auto">
+                    { renderSection("Social", HEADER_MENU_SOCIAL) }
+                    { renderSection("Personal", HEADER_MENU_PERSONAL) }
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };
+
+const renderSection = (title, items) => (
+    <section className="mt-3 bg-white border border-solid border-gray-200 rounded-xl">
+        <header className="px-6 py-4 border-b border-gray-300">
+            <h2 className="text-lg font-semibold">{title}</h2>
+        </header>
+        <ul className="flex flex-wrap p-2">
+            { items.map((value, index) => (
+                <HeaderMenuSectionItem key={index} sectionItemData={value} />
+            )) }
+        </ul>
+    </section>
+);
 
 export default HeaderMenu;

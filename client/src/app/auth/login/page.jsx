@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { fetchLoginData } from "@/utils";
 import { useCheckAccessToken } from "@/hooks";
+import { encryptData, fetchLoginData } from "@/utils";
 import { AuthLoginForm, AuthHeader } from "@/components";
 import { useAccessTokenContext } from "@/components/ProviderComponents/Providers";
+
 import Illustration from "/public/images/Illustration/illustration-of-a-man-and-a-woman-watering-a-plant.jpg";
 
 const Login = () => {
@@ -21,7 +22,11 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        return await fetchLoginData(router, loginFormData.session_key, loginFormData.session_password, setError, setAccessToken)
+        const encryptedData = {
+            session_key: encryptData(loginFormData.session_key),
+            session_password: encryptData(loginFormData.session_password),
+        }
+        return await fetchLoginData(router, encryptedData, setError, setAccessToken)
     }
 
     const handleChange = (e) => {

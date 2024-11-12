@@ -1,37 +1,27 @@
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
-const fetchRegisterData = async (router, session, setError) => {
+import { authService } from "@/utils";
+
+const fetchRegisterData = async (router, encryptedData, setError) => {
     try {
-        const { session_key, session_password, session_firstname, session_lastname } = session;
-
-        const hashedPassword = await bcrypt.hash(session_password, 10);
-
-        const dataToSend = { session_key, hashedPassword, session_firstname, session_lastname };
-
-        const url = process.env.NEXT_PUBLIC_API_URL + "/api/v1/auth/register";
-
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dataToSend),
-        });
-
-        if (response.ok) {
-            return router.push("/auth/login");
-        } else {
-            if (response.status === 409) {
-                const errorData = await response.json();
-                return setError({ isEmailError: true, isPasswordError: false, formErrorStatus: errorData.message });
-            } else {
-                return NextResponse.json({ error: ((await response.json()).message || "Unexpected error occurred" )});
+        const responseData = await authService.registerUser(encryptedData);
+        
+        if (responseData.error) {
+            const errorMessage = responseData.error;
+            if (errorMessage.includes("Email")) {
+                return setError({ isEmailError: true, isPasswordError: false, formErrorStatus: errorMessage });
             }
+            return setError({ isEmailError: false, isPasswordError: false, formErrorStatus: errorMessage });
         }
+        
+        if (responseData.message === "User registered successfully") {
+            return router.push("/auth/login");
+        }
+
+        return NextResponse.json({ error: "Unexpected response structure" }, { status: 400 });
     } catch (error) {
-        return NextResponse.json({ error: "An unexpected error occurred" });
+        console.error("Error during registration:", error);
+        return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
     }
 };
 

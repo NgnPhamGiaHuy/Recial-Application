@@ -9,7 +9,7 @@ const Aside = () => {
                 <div className="flex flex-col min-h-0 flex-shrink grow basis-full overflow-x-hidden overflow-y-auto overscroll-y-contain relative">
                     <div className="mt-[16px] flex flex-col grow relative">
                         <section>
-                            <AsideWeather/>
+                            {/*<AsideWeather/>*/}
                         </section>
                         <section>
                             <AsideNavigation/>

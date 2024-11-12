@@ -1,12 +1,12 @@
 "use client"
 
+import bcrypt from "bcryptjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useCheckAccessToken } from "@/hooks";
 import { AuthHeader, AuthLoginForm } from "@/components";
-import { fetchRegisterData, handleValidateForm } from "@/utils";
-
+import { encryptData, fetchRegisterData, handleValidateForm } from "@/utils";
 
 const Signup = () => {
     const router = useRouter();
@@ -26,11 +26,20 @@ const Signup = () => {
 
         handleValidateForm(registerFormData, setError);
 
+        const hashedPassword = await bcrypt.hash(registerFormData.session_password, 10);
+        
+        const encryptedData = {
+            session_key: encryptData(registerFormData.session_key),
+            session_password: encryptData(hashedPassword),
+            session_firstname: encryptData(registerFormData.session_firstname),
+            session_lastname: encryptData(registerFormData.session_lastname),
+        }
+        
         if (error.isEmailError || error.isPasswordError) {
             return;
         }
 
-        return await fetchRegisterData(router, registerFormData, setError);
+        return await fetchRegisterData(router, encryptedData, setError);
     }
 
     return (

@@ -1,6 +1,9 @@
 import fetchLoginData from "@/utils/auth/fetchAuthData/fetchLoginData";
 import fetchRegisterData from "@/utils/auth/fetchAuthData/fetchRegisterData";
 import fetchTokenRefresh from "@/utils/auth/fetchAuthData/fetchTokenRefresh";
+import encryptData from "@/utils/auth/handleCrypto/encryptData";
+import decryptData from "@/utils/auth/handleCrypto/decryptData";
+import authService from "@/utils/auth/service/authService";
 import handleValidateForm from "@/utils/auth/handleValidateForm";
 import handleCheckPasswordStrength from "@/utils/auth/handleCheckPasswordStrength";
 import handleDecodeToken from "@/utils/auth/handleDecodeToken";
@@ -88,7 +91,7 @@ import getWeatherForecastData from "@/utils/weather/getWeatherForecastData";
 import interpretWeatherCode from "@/utils/weather/interpretWeatherCode";
 
 export {
-    fetchLoginData, fetchRegisterData, fetchTokenRefresh, handleValidateForm, handleCheckPasswordStrength, handleDecodeToken, handleValidEmail,
+    fetchLoginData, fetchRegisterData, fetchTokenRefresh, encryptData, decryptData, authService, handleValidateForm, handleCheckPasswordStrength, handleDecodeToken, handleValidEmail,
     calculateAttachmentStyles, calculateGridProperties, calculateTimeDifference,
     createPostComment, updateComment, updateNestedComments,
     fetchDataWithAccessToken, fetchDataWithAccessTokenAndData,

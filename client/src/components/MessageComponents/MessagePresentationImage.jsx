@@ -12,7 +12,7 @@ const MessagePresentationImage = ({ conversationPictureUrl }) => {
                     )) }
                 </div>
             ) : (
-                <div className="w-full h-full overflow-hidden block rounded-3xl bg-white border border-solid border-gray-500 relative">
+                <div className="w-full h-full overflow-hidden block rounded-full bg-white border border-solid border-gray-500 relative">
                     <div className="w-full h-full flex flex-col relative">
                         <Image src={conversationPictureUrl} alt={`${conversationPictureUrl}-image`} fill={true} sizes="(max-width: 768px) 100vw" className="object-cover"/>
                     </div>

@@ -6,9 +6,9 @@ import Favicon from "/public/images/Metadata/favicon.ico";
 const HeaderLogo = ({ isLogoShowed }) => {
     return (
         <div>
-            <div className={`${isLogoShowed ? "hidden" : "flex"} h-full flex-row relative items-center z-0 ml-[16px]`}>
-                <Link href="/" className="w-full h-full flex flex-col items-center justify-center relative">
-                    <div className="w-[40px] h-[40px] relative">
+            <div className={`${isLogoShowed ? "hidden" : "flex"} h-full ml-4 flex-row relative items-center z-0`}>
+                <Link href="/" className="w-full h-full flex-center flex-col relative">
+                    <div className="w-10 h-10 relative">
                         <Image src={Favicon} alt="logo-image" fill={true} sizes="(max-width: 768px) 100vw" className="object-contain"/>
                     </div>
                 </Link>

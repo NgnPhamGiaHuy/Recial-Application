@@ -1,47 +1,11 @@
 "use client"
 
-import bcrypt from "bcryptjs";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { useCheckAccessToken } from "@/hooks";
 import { AuthHeader, AuthLoginForm } from "@/components";
-import { encryptData, fetchRegisterData, handleValidateForm } from "@/utils";
+import { useCheckAccessToken, useSignup } from "@/hooks";
 
 const Signup = () => {
-    const router = useRouter();
-
-    const [error, setError] = useState({ isEmailError: false, isPasswordError: false, formErrorStatus: "" });
-    const [registerFormData, setRegisterFormData] = useState({ session_key: "", session_password: "", session_firstname: "", session_lastname: "" });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setRegisterFormData({ ...registerFormData, [name]: value });
-
-        return handleValidateForm({ ...registerFormData, [name]: value }, setError);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        handleValidateForm(registerFormData, setError);
-
-        const hashedPassword = await bcrypt.hash(registerFormData.session_password, 10);
-        
-        const encryptedData = {
-            session_key: encryptData(registerFormData.session_key),
-            session_password: encryptData(hashedPassword),
-            session_firstname: encryptData(registerFormData.session_firstname),
-            session_lastname: encryptData(registerFormData.session_lastname),
-        }
-        
-        if (error.isEmailError || error.isPasswordError) {
-            return;
-        }
-
-        return await fetchRegisterData(router, encryptedData, setError);
-    }
-
+    const { error, setError, handleSubmit, handleChange } = useSignup();
+    
     return (
         <div className="w-full h-full bg-stone-100">
             <AuthHeader/>

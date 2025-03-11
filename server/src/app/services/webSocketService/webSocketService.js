@@ -72,7 +72,7 @@ class WebSocketService {
                 type: "create_message",
                 messageId: newMessage._id.toString(),
             }
-
+            console.log(conversationId)
             this.broadcastMessageToConversation(message, conversationId);
         }
     }

@@ -1,8 +1,9 @@
-import useCheckAccessToken from "@/hooks/useAuth/useCheckAccessToken";
-import useDecodeToken from "@/hooks/useAuth/useDecodeToken";
-import useLogout from "@/hooks/useAuth/useLogout";
-import useTokenRefresh from "@/hooks/useAuth/useTokenRefresh";
-import useWithAuth from "@/hooks/useAuth/useWithAuth";
+import useLogout from "@/hooks/useAuth/actions/useLogout";
+import useSignup from "@/hooks/useAuth/core/useSignup";
+import useCheckAccessToken from "@/hooks/useAuth/wrappers/useCheckAccessToken";
+import useDecodeToken from "@/hooks/useAuth/core/useDecodeToken";
+import useTokenRefresh from "@/hooks/useAuth/core/useTokenRefresh";
+import useWithAuth from "@/hooks/useAuth/wrappers/useWithAuth";
 
 import useCommentData from "@/hooks/useComment/useCommentData";
 import useCommentMediaData from "@/hooks/useComment/useCommentMediaData";
@@ -109,7 +110,7 @@ import useHandleUploadThumbnail from "@/hooks/useVideo/useHandleUploadThumbnail"
 import useWebSocket from "@/hooks/useWebSocket/useWebSocket";
 
 export {
-    useCheckAccessToken, useDecodeToken, useLogout, useTokenRefresh, useWithAuth,
+    useCheckAccessToken, useDecodeToken, useLogout, useSignup, useTokenRefresh, useWithAuth,
 
     useCommentData, useCommentMediaData,
 

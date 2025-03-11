@@ -6,14 +6,16 @@ const MiddlewareController = require("../../../controllers/Auth/MiddlewareContro
 
 const router = express.Router();
 
-router.route("/login").post(AuthController.loginUser);
+router.route("/login").post(AuthController.login);
 
-router.route("/register").post(AuthController.registerUser);
+router.route("/register").post(AuthController.register);
+
+router.route("/verify-otp").post(AuthController.verifyOTP);
 
 router.route("/google").post(GoogleAuthController.handleGoogleSignIn);
 
 router.route("/refresh").post(TokenController.requestRefreshToken);
 
-router.route("/logout").get(MiddlewareController.verifyToken, AuthController.logoutUser);
+router.route("/logout").get(MiddlewareController.verifyToken, AuthController.logout);
 
 module.exports = router;

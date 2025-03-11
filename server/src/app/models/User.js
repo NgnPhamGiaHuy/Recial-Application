@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const authProperties = require("./User/authProperties");
 const userProperties = require("./User/userProperties");
 const profileProperties = require("./User/profileProperties");
 const socialProperties = require("./User/socialProperties");
@@ -16,6 +17,7 @@ const UserSchema = new Schema(
         ...contactProperties,
         ...mediaProperties,
         ...permissionsProperties,
+        ...authProperties,
     }, {
         timestamps: true,
     },

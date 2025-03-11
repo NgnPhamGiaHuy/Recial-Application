@@ -36,8 +36,8 @@ const Login = () => {
     }
 
     return (
-        <div className="w-screen h-screen bg-white">
-            <div className="w-full h-full block">
+        <div className="bg-white">
+            <div>
                 <AuthHeader/>
                 <main className="h-[calc(100%-80px)] flex flex-col items-center justify-center relative overflow-hidden">
                     <section className="min-h-[560px] max-w-[1128px] flex flex-nowrap pt-[0px] items-center justify-center w-full h-full relative">

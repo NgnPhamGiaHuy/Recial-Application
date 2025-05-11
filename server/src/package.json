@@ -8,17 +8,20 @@
     "start": "nodemon --inspect index.js",
     "start:local": "dotenv -e .env nodemon --inspect index.js",
     "start:production": "dotenv -e .env.production nodemon --inspect index_production.js",
+    "swagger-autogen": "node ./utils/swagger-autogen.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.6.0",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
+    "depcheck": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "express-rate-limit": "^7.2.0",
@@ -32,11 +35,13 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "punycode": "^2.3.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "ws": "^8.15.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1",
     "dotenv-cli": "^7.4.2",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "swagger-autogen": "^2.23.7"
   }
 }

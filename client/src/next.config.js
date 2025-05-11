@@ -20,7 +20,17 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: "https",
+                hostname: "example.com",
+                pathname: "**",
+            },
+            {
+                protocol: "https",
                 hostname: "storage.cloud.google.com",
+                pathname: "**",
+            },
+            {
+                protocol: "https",
+                hostname: "cdn.jsdelivr.net",
                 pathname: "**",
             },
             {

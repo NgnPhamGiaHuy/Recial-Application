@@ -4,6 +4,7 @@ const User = require("../../models/User");
 const Setting = require("../../models/Setting");
 
 const generateToken = require("../../services/tokenService/generateToken");
+const responseHandler = require("../../../utils/responseHandler");
 
 class GoogleAuthController {
     handleGoogleSignIn = async (req, res) => {
@@ -11,7 +12,7 @@ class GoogleAuthController {
             const googleToken = req.headers.authorization;
 
             if (!googleToken) {
-                return res.status(401).json({ error: "Google token missing" });
+                return responseHandler.unauthorized(res, "Google token missing");
             }
 
             const token = googleToken.split(' ')[1];
@@ -36,7 +37,7 @@ class GoogleAuthController {
 
                 await existingUser.save();
 
-                return res.status(201).json({ accessToken: accessToken, refreshToken: refreshToken });
+                return responseHandler.created(res, { accessToken, refreshToken }, "User logged in successfully");
             }
 
             const newUser = new User({
@@ -61,10 +62,10 @@ class GoogleAuthController {
 
             await newUserSetting.save();
 
-            return res.status(201).json({ accessToken, refreshToken });
+            return responseHandler.created(res, { accessToken, refreshToken }, "User registered successfully");
         } catch (error) {
             console.error("Error in handleGoogleSignIn: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     };
 }

@@ -1,4 +1,5 @@
 const getGroupDataService = require("../../services/groupService/getGroupDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class GroupController {
     getGroupData = async (req, res) => {
@@ -8,13 +9,13 @@ class GroupController {
             const groupProps = await getGroupDataService.getFormattedGroupDataById(groupId);
 
             if (!groupProps) {
-                return res.status(404).json({ error: "Group not found" });
+                return responseHandler.notFound(res, "Group not found");
             }
 
-            return res.status(200).json(groupProps);
+            return responseHandler.ok(res, groupProps);
         } catch (error) {
             console.error("Error getGroupData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -25,13 +26,13 @@ class GroupController {
             const groupMemberProps = await getGroupDataService.getFormattedGroupMemberDataById(groupId);
 
             if (!groupMemberProps) {
-                return res.status(404).json({ error: "Group member not found" });
+                return responseHandler.notFound(res, "Group member not found");
             }
 
-            return res.status(200).json(groupMemberProps);
+            return responseHandler.ok(res, groupMemberProps);
         } catch (error) {
             console.error("Error in getGroupMember: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -44,13 +45,13 @@ class GroupController {
             const groupPostProps = await getGroupDataService.getFormattedGroupPostDataById(groupId, page, postsPerPage);
 
             if (!groupPostProps) {
-                return res.status(404).json({ error: "Group post not found" });
+                return responseHandler.notFound(res, "Group post not found");
             }
 
-            return res.status(200).json(groupPostProps);
+            return responseHandler.ok(res, groupPostProps);
         } catch (error) {
             console.error("Error in getGroupPost: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -61,13 +62,13 @@ class GroupController {
             const groupActivityProps = await getGroupDataService.getFormattedGroupActivityDataById(groupId);
 
             if (!groupActivityProps) {
-                return res.status(404).json({ error: "Group post not found" });
+                return responseHandler.notFound(res, "Group activity not found");
             }
 
-            return res.status(200).json(groupActivityProps);
+            return responseHandler.ok(res, groupActivityProps);
         } catch (error) {
             console.error("Error in getGroupActivity: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -83,10 +84,10 @@ class GroupController {
 
             const groupsData = await Promise.all(groupDataPromises);
 
-            return res.status(200).json(groupsData);
+            return responseHandler.ok(res, groupsData);
         } catch (error) {
             console.error("Error in getMultipleGroupData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     }
 }

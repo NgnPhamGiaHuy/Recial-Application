@@ -1,14 +1,15 @@
 const getSuggestDataService = require("../../services/suggestService/getSuggestDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class SuggestController {
     getSuggestEventData = async (req, res) => {
         try {
             const suggestEvent = await getSuggestDataService.getSuggestedEventsData();
 
-            return res.status(200).json(suggestEvent);
+            return responseHandler.ok(res, suggestEvent);
         } catch (error) {
             console.error("Error in getSuggestEventData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -16,10 +17,10 @@ class SuggestController {
         try {
             const suggestGroup = await getSuggestDataService.getSuggestedGroupData();
 
-            return res.status(200).json(suggestGroup);
+            return responseHandler.ok(res, suggestGroup);
         } catch (error) {
             console.error("Error in getSuggestGroupData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -27,10 +28,10 @@ class SuggestController {
         try {
             const suggestPage = await getSuggestDataService.getSuggestedPagesData();
 
-            return res.status(200).json(suggestPage);
+            return responseHandler.ok(res, suggestPage);
         } catch (error) {
             console.error("Error in getSuggestPageData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

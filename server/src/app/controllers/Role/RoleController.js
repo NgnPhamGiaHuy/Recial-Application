@@ -1,4 +1,5 @@
 const getRoleDataService = require("../../services/roleService/getRoleDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class RoleController {
     getRoleData = async (req, res) => {
@@ -8,13 +9,13 @@ class RoleController {
             const roleProps = await getRoleDataService.getRawRoleData(roleId);
 
             if (!roleProps) {
-                return res.status(404).json({ error: "Role not found " });
+                return responseHandler.notFound(res, "Role not found");
             }
 
-            return res.status(200).json(roleProps);
+            return responseHandler.ok(res, roleProps);
         } catch (error) {
             console.error("Error in getRoleData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

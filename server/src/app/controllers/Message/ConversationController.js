@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 const WebSocketService = require("../../services/webSocketService/webSocketService");
 const getConversationService = require("../../services/conversationService/getConversationService");
 const deleteConversationService = require("../../services/conversationService/deleteConversationService");
@@ -11,10 +13,10 @@ class ConversationController {
 
             const conversationData = await getConversationService.getFormattedConversationMessageData(userId, conversation, page);
 
-            return res.status(200).json(conversationData);
+            return responseHandler.ok(res, conversationData);
         } catch (error) {
             console.error("Error in getConversationData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -30,10 +32,10 @@ class ConversationController {
 
             await webSocketService.notifyClientsAboutNewConversation(conversationIds, createdConversationData);
 
-            return res.status(200).json(createdConversationData);
+            return responseHandler.created(res, createdConversationData, "Conversation created successfully");
         } catch (error) {
             console.error("Error in createConversationData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -49,10 +51,10 @@ class ConversationController {
 
             await webSocketService.notifyClientsAboutDeleteConversation(userId, deletedConversation);
 
-            return res.status(200).json(deletedConversation);
+            return responseHandler.ok(res, deletedConversation, "Conversation deleted successfully");
         } catch (error) {
             console.error("Error in deleteConversationData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

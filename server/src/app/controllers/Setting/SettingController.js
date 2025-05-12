@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 class SettingController {
     setPostVisibilitySetting = async (req, res) => {
         try {
@@ -5,7 +7,7 @@ class SettingController {
 
         } catch (error) {
             console.error("Error in setPostVisibilitySetting: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

@@ -1,6 +1,6 @@
 const VideoSaved = require("../../models/VideoSaved");
-
 const WebSocketService = require("../../services/webSocketService/webSocketService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class SavedController {
     createVideoSaved = async (req, res) => {
@@ -15,7 +15,7 @@ class SavedController {
 
                 await existingVideoSaved.save();
 
-                return res.status(400).json({ error: "Video already exist" });
+                return responseHandler.conflict(res, "Video already saved");
             }
 
             const videoSaved = new VideoSaved({
@@ -30,10 +30,10 @@ class SavedController {
 
             await webSocketService.notifyClientsAboutCreateVideoSaved(userId, videoSaved);
 
-            return res.status(200).json(videoSaved);
+            return responseHandler.created(res, videoSaved, "Video saved successfully");
         } catch (error) {
             console.error("Error in createVideoSaved: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -49,10 +49,10 @@ class SavedController {
 
             await webSocketService.notifyClientsAboutDeleteVideoSaved(userId, deletedVideoSaved);
 
-            return res.status(200).json(deletedVideoSaved);
+            return responseHandler.ok(res, deletedVideoSaved, "Video unsaved successfully");
         } catch (error) {
             console.error("Error in deleteVideoSaved: ", error);
-            return res.status(500).send({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

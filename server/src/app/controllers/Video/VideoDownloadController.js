@@ -3,6 +3,7 @@ const admin = require("firebase-admin");
 const path = require("path");
 
 const Video = require("../../models/Video");
+const responseHandler = require("../../../utils/responseHandler");
 
 const serviceAccount = require("../../../config/firebase/secrets/recial-86c5e-firebase-adminsdk-wli0y-0d866033b0.json");
 
@@ -28,14 +29,14 @@ class VideoDownloadController {
 
             const message = "Video URLs updated successfully";
             if (res) {
-                return res.status(200).send(message);
+                return responseHandler.ok(res, { count: videoTrackList.length }, message);
             } else {
                 console.log(message);
             }
         } catch (error) {
             console.error("Error in downloadVideoAndUpdateURL: ", error);
             if (res) {
-                return res.status(500).send("Failed to download and update video URLs");
+                return responseHandler.serverError(res, "Failed to download and update video URLs");
             }
         }
     }

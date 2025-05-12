@@ -3,6 +3,7 @@ const getTypeDataService = require("../../services/typeService/getTypeDataServic
 const getReactionDataService = require("../../services/reactionService/getReactionDataService");
 const createReactionDataService = require("../../services/reactionService/createReactionDataService");
 const deleteReactionDataService = require("../../services/reactionService/deleteReactionDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class ReactionController {
     getReactionData = async (req, res) => {
@@ -12,18 +13,18 @@ class ReactionController {
             const reactionData = await getReactionDataService.getRawReactionData(reactionId);
 
             if (!reactionData) {
-                return res.status(404).json({ error: "Reaction not found" });
+                return responseHandler.notFound(res, "Reaction not found");
             }
 
             const reactionProps = await getReactionDataService.getFormattedReactionDataByRaw(reactionData);
 
-            return res.status(200).json(reactionProps);
+            return responseHandler.ok(res, reactionProps);
         } catch (error) {
             console.error("Error in getReactionData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
-    
+
     createReaction = async (req, res) => {
         try {
             const userId = req.userId;
@@ -44,17 +45,17 @@ class ReactionController {
 
                 await webSocketService.notifyClientsAboutUpdateReaction(userId, existReaction);
 
-                return res.status(200).json({ message: "Reaction update/create successfully" });
+                return responseHandler.ok(res, existReaction, "Reaction updated successfully");
             }
 
             const newReaction = await createReactionDataService.createReactionData(userId, destination_id, reactionType);
 
             await webSocketService.notifyClientsAboutCreateReaction(userId, newReaction);
 
-            return res.status(200).json({ message: "Reaction create successfully" });
+            return responseHandler.created(res, newReaction, "Reaction created successfully");
         } catch (error) {
             console.error("Error in createReaction: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -78,17 +79,17 @@ class ReactionController {
 
                 await webSocketService.notifyClientsAboutUpdateReaction(userId, existReaction, "update_comment_reaction");
 
-                return res.status(200).json({ message: "Reaction update/create successfully" });
+                return responseHandler.ok(res, existReaction, "Comment reaction updated successfully");
             }
 
             const newReaction = await createReactionDataService.createReactionData(userId, destination_id, reactionType);
 
             await webSocketService.notifyClientsAboutCreateReaction(userId, newReaction, "create_comment_reaction");
 
-            return res.status(200).json({ message: "Reaction create successfully" });
+            return responseHandler.created(res, newReaction, "Comment reaction created successfully");
         } catch (error) {
             console.error("Error in createReaction: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -104,10 +105,10 @@ class ReactionController {
 
             await webSocketService.notifyClientsAboutDeleteReaction(userId, deletedReactionData);
 
-            return res.status(200).json(deletedReactionData);
+            return responseHandler.ok(res, deletedReactionData, "Reaction deleted successfully");
         } catch (error) {
             console.error("Error in deleteReaction: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -123,10 +124,10 @@ class ReactionController {
 
             await webSocketService.notifyClientsAboutDeleteReaction(userId, deletedReactionData, "delete_comment_reaction");
 
-            return res.status(200).json(deletedReactionData);
+            return responseHandler.ok(res, deletedReactionData, "Comment reaction deleted successfully");
         } catch (error) {
             console.error("Error in deleteReaction: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

@@ -1,4 +1,5 @@
 const getPostDataService = require("../../services/postService/getPostDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class MediaRecentController {
     getPostRecentMediaData = async (req, res) => {
@@ -9,10 +10,10 @@ class MediaRecentController {
 
             const recentPostPhoto = postData.post_photos;
 
-            return res.status(200).json(recentPostPhoto);
+            return responseHandler.ok(res, recentPostPhoto);
         } catch (error) {
             console.error("Error in getPostRecentMediaData", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -20,10 +21,10 @@ class MediaRecentController {
         try {
             const { photo_id } = req.query;
 
-            return res.status(200).json("");
+            return responseHandler.ok(res, "");
         } catch (error) {
             console.error("Error in getPhotoRecentMediaData", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -31,10 +32,10 @@ class MediaRecentController {
         try {
             const { story_id } = req.query;
 
-            return res.status(200).json("");
+            return responseHandler.ok(res, "");
         } catch (error) {
             console.error("Error in getStoryRecentMediaData", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

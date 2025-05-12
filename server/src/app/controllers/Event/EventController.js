@@ -1,4 +1,5 @@
 const getEventDataService = require("../../services/eventService/getEventDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class EventController {
     getEventData = async (req, res) => {
@@ -8,13 +9,13 @@ class EventController {
             const eventProps = await getEventDataService.getFormattedEventDataById(eventId);
 
             if (!eventProps) {
-                return res.status(404).json({ error: "Event not found" });
+                return responseHandler.notFound(res, "Event not found");
             }
 
-            return res.status(200).json(eventProps);
+            return responseHandler.ok(res, eventProps);
         } catch (error) {
             console.error("Error in getEventData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -25,13 +26,13 @@ class EventController {
             const eventProps = await getEventDataService.getFormattedEventPageDataByUserId(userId);
 
             if (!eventProps) {
-                return res.status(404).json({ error: "Event not found" });
+                return responseHandler.notFound(res, "Event not found");
             }
 
-            return res.status(200).json(eventProps);
+            return responseHandler.ok(res, eventProps);
         } catch (error) {
             console.error("Error in getEventPageData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -42,13 +43,13 @@ class EventController {
             const eventMemberProps = await getEventDataService.getFormattedEventMemberDataById(eventId);
 
             if (!eventMemberProps) {
-                return res.status(404).json({ error: "Event member not found" });
+                return responseHandler.notFound(res, "Event member not found");
             }
 
-            return res.status(200).json(eventMemberProps);
+            return responseHandler.ok(res, eventMemberProps);
         } catch (error) {
             console.error("Error in getEventMember: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 }

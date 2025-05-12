@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 const getUserDataService = require("../../services/userService/getUserDataService");
 const getPostDataService = require("../../services/postService/getPostDataService");
 
@@ -11,7 +13,7 @@ class PostIdController {
             const user = await getUserDataService.getRawUserData(userQueryId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const postList = user.post_list.slice((page - 1) * postsPerPage, page * postsPerPage);
@@ -20,10 +22,10 @@ class PostIdController {
                 return await getPostDataService.getFormattedPostDataById(postId);
             }));
 
-            return res.status(200).json(postsWithUserData);
+            return responseHandler.ok(res, postsWithUserData);
         } catch (error) {
             console.error("Error in getPostByUserId: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -33,10 +35,10 @@ class PostIdController {
 
             const postProps = await getPostDataService.getFormattedPostDataById(postId);
 
-            return res.status(200).json(postProps)
+            return responseHandler.ok(res, postProps);
         } catch (error) {
             console.error("Error in getPostByPostId: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

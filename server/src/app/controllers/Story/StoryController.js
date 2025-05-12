@@ -1,17 +1,18 @@
 const generalDataService = require("../../services/generalDataService");
 const getStoryDataService = require("../../services/mediaService/getStoryDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class StoryController {
-    getStoryData = async (req, res)  =>{
+    getStoryData = async (req, res) => {
         try {
             const { story_id } = req.query;
 
             const storyData = await getStoryDataService.getFormattedStoryDataById(story_id);
 
-            return res.status(200).json(storyData);
+            return responseHandler.ok(res, storyData);
         } catch (error) {
             console.error("Error getStoryData", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -21,10 +22,10 @@ class StoryController {
 
             const storyData = await generalDataService.getCommentData(story_id);
 
-            return res.status(200).json(storyData);
+            return responseHandler.ok(res, storyData);
         } catch (error) {
             console.error("Error in getStoryComment", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -34,10 +35,10 @@ class StoryController {
 
             const storyData = await generalDataService.getReactionData(story_id);
 
-            return res.status(200).json(storyData);
+            return responseHandler.ok(res, storyData);
         } catch (error) {
             console.error("Error in getStoryReaction", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

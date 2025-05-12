@@ -1,11 +1,12 @@
 const getUserDataService = require("../../services/userService/getUserDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class UserGetDataController {
     getUserData = async (req, res) => {
         try {
             const user = req.user;
 
-            const { isOAuthUser, password, refreshToken, friends, followers, following, photo_list, video_list, story_list, post_list, roles, ...otherUserProps} = user._doc;
+            const { isOAuthUser, password, refreshToken, friends, followers, following, photo_list, video_list, story_list, post_list, roles, ...otherUserProps } = user._doc;
 
             const userProps = {
                 user: {
@@ -13,10 +14,10 @@ class UserGetDataController {
                 },
             };
 
-            return res.status(200).json(userProps);
+            return responseHandler.ok(res, userProps);
         } catch (error) {
             console.error("Error in getUserData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -26,10 +27,10 @@ class UserGetDataController {
 
             const userContactProps = await getUserDataService.getFormattedUserContact(user);
 
-            return res.status(200).json(userContactProps);
+            return responseHandler.ok(res, userContactProps);
         } catch (error) {
             console.error("Error in getUserContact: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -39,10 +40,10 @@ class UserGetDataController {
 
             const userProfileProps = await getUserDataService.getFormattedUserProfile(user);
 
-            return res.status(200).json(userProfileProps);
+            return responseHandler.ok(res, userProfileProps);
         } catch (error) {
             console.error("Error in getUserProfile: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -52,10 +53,10 @@ class UserGetDataController {
 
             const friendProps = await getUserDataService.getUserSocial(user.friends);
 
-            return res.status(200).json(friendProps);
+            return responseHandler.ok(res, friendProps);
         } catch (error) {
             console.error("Error in getUserFriend: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -65,10 +66,10 @@ class UserGetDataController {
 
             const friendRequestProps = await getUserDataService.getUserFriendRequest(userId);
 
-            return res.status(200).json(friendRequestProps);
+            return responseHandler.ok(res, friendRequestProps);
         } catch (error) {
             console.error("Error in getUserFriendRequest: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -78,10 +79,10 @@ class UserGetDataController {
 
             const settingProps = await getUserDataService.getUserSetting(userId);
 
-            return res.status(200).json(settingProps);
+            return responseHandler.ok(res, settingProps);
         } catch (error) {
             console.error("Error in getUserSetting: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -91,10 +92,10 @@ class UserGetDataController {
 
             const followingProps = await getUserDataService.getUserSocial(user.following);
 
-            return res.status(200).json(followingProps);
+            return responseHandler.ok(res, followingProps);
         } catch (error) {
             console.error("Error in getUserFollowing: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -104,10 +105,10 @@ class UserGetDataController {
 
             const followerProps = await getUserDataService.getUserSocial(user.followers);
 
-            return res.status(200).json(followerProps);
+            return responseHandler.ok(res, followerProps);
         } catch (error) {
             console.error("Error in getUserFollower: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -117,10 +118,10 @@ class UserGetDataController {
 
             const searchProps = await getUserDataService.getUserSearchQuery(userId);
 
-            return res.status(200).json(searchProps);
+            return responseHandler.ok(res, searchProps);
         } catch (error) {
             console.error("Error in getUserSearchQuery: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -132,10 +133,10 @@ class UserGetDataController {
 
             const messageProps = await getUserDataService.getUserConversation(userId, page);
 
-            return res.status(200).json(messageProps);
+            return responseHandler.ok(res, messageProps);
         } catch (error) {
             console.error("Error in getUserMessage: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -145,10 +146,10 @@ class UserGetDataController {
 
             const photoListProps = await getUserDataService.getUserPhotoList(user.photo_list);
 
-            return res.status(200).json(photoListProps);
+            return responseHandler.ok(res, photoListProps);
         } catch (error) {
             console.error("Error in getUserPhotoList: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -158,10 +159,10 @@ class UserGetDataController {
 
             const videoListProps = await getUserDataService.getUserVideoList(user.video_list);
 
-            return res.status(200).json(videoListProps);
+            return responseHandler.ok(res, videoListProps);
         } catch (error) {
             console.error("Error in getUserVideoList: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -171,10 +172,10 @@ class UserGetDataController {
 
             const groupListProps = await getUserDataService.getUserGroupWithMember(userId);
 
-            return res.status(200).json(groupListProps);
+            return responseHandler.ok(res, groupListProps);
         } catch (error) {
             console.error("Error in getUserGroupList: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -184,10 +185,10 @@ class UserGetDataController {
 
             const notificationProps = await getUserDataService.getUserNotifications(userId);
 
-            return res.status(200).json(notificationProps);
+            return responseHandler.ok(res, notificationProps);
         } catch (error) {
             console.error("Error in getUserNotification: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

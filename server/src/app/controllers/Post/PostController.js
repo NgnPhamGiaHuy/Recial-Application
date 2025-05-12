@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 const WebSocketService = require("../../services/webSocketService/webSocketService");
 const getPostDataService = require("../../services/postService/getPostDataService");
 const deletePostDataService = require("../../services/postService/deletePostDataService");
@@ -11,15 +13,15 @@ class PostController {
 
             const postsWithUserData = await enhancePostDataService.enhancePostsWithUserData(posts);
 
-            return res.status(200).json(postsWithUserData)
+            return responseHandler.ok(res, postsWithUserData);
         } catch (error) {
             console.error("Error in getPostData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
     createPostData = async (req, res) => {
-       try {
+        try {
             const postData = req.body;
             const userData = req.user;
 
@@ -29,15 +31,15 @@ class PostController {
 
             await userData.save();
 
-           const wss = req.app.get("wss");
-           const webSocketService = new WebSocketService(wss);
+            const wss = req.app.get("wss");
+            const webSocketService = new WebSocketService(wss);
 
-           await webSocketService.notifyClientsAboutNewPost(userData._id.toString(), newPost);
+            await webSocketService.notifyClientsAboutNewPost(userData._id.toString(), newPost);
 
-            return res.status(200).json(newPost);
+            return responseHandler.ok(res, newPost, "Post created successfully");
         } catch (error) {
-           console.error("Error in createPostData: ", error);
-           return res.status(500).json({ error: "Internal Server Error" });
+            console.error("Error in createPostData: ", error);
+            return responseHandler.serverError(res);
         }
     }
 
@@ -49,13 +51,13 @@ class PostController {
             const deletedPost = await getPostDataService.getRawPostData(postId);
 
             if (!deletedPost) {
-                return res.status(404).json({ error: "Post not found" });
+                return responseHandler.notFound(res, "Post not found");
             }
 
             const user = await deletePostDataService.findAndDeleteUserPost(userId, deletedPost);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             await deletePostDataService.deletePost(req, deletedPost);
@@ -65,10 +67,10 @@ class PostController {
 
             await webSocketService.notifyClientsAboutDeletePost(userId, deletedPost);
 
-            return res.status(200).json({ message: "Post deleted successfully" });
+            return responseHandler.ok(res, null, "Post deleted successfully");
         } catch (error) {
             console.error("Error in deletePostData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

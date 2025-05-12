@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 const WebSocketService = require("../../services/webSocketService/webSocketService");
 const deleteCommentService = require("../../services/commentService/deleteCommentService");
 const updateCommentService = require("../../services/commentService/updateCommentService");
@@ -11,10 +13,10 @@ class CommentController {
 
             const commentProps = await getCommentDataService.getFormattedCommentDataById(commentId);
 
-            return res.status(200).json(commentProps);
+            return responseHandler.ok(res, commentProps);
         } catch (error) {
             console.error("Error in getCommentData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -30,10 +32,10 @@ class CommentController {
 
             await webSocketService.notifyClientsAboutNewComment("create_comment", userId, newComment);
 
-            return res.status(200).json(newComment);
+            return responseHandler.created(res, newComment, "Comment created successfully");
         } catch (error) {
             console.error("Error in createCommentData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -49,10 +51,10 @@ class CommentController {
 
             await webSocketService.notifyClientsAboutNewComment("create_media_comment", userId, newComment);
 
-            return res.status(200).json(newComment);
+            return responseHandler.created(res, newComment, "Media comment created successfully");
         } catch (error) {
             console.error("Error in createCommentData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     };
 
@@ -63,10 +65,10 @@ class CommentController {
 
             const updatedComment = await updateCommentService.updateCommentDataById(comment_id, comment);
 
-            return res.status(200).json(updatedComment);
+            return responseHandler.ok(res, updatedComment, "Comment updated successfully");
         } catch (error) {
             console.error("Error in updateMediaCommentData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -76,10 +78,10 @@ class CommentController {
 
             const deletedComment = await deleteCommentService.deleteCommentDataById(comment_id);
 
-            return res.status(200).json(deletedComment);
+            return responseHandler.ok(res, deletedComment, "Comment deleted successfully");
         } catch (error) {
             console.error("Error in deleteMediaCommentData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

@@ -1,6 +1,7 @@
 const WebSocketService = require("../../services/webSocketService/webSocketService");
 const getFriendRequestDataService = require("../../services/friendRequestService/getFriendRequestDataService");
 const deleteFriendRequestDataService = require("../../services/friendRequestService/deleteFriendRequestDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class UserUpdateDataController {
     updateUserFriendRequest = async (req, res) => {
@@ -26,10 +27,10 @@ class UserUpdateDataController {
 
             await webSocketService.notifyClientsAboutUpdateFriendRequest(user._id, status, userFriendRequestData);
 
-            return res.status(200).json({ message: "Request processed successfully" });
+            return responseHandler.ok(res, null, "Request processed successfully");
         } catch (error) {
             console.error("Error in setUserFriendRequest: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -73,10 +74,10 @@ class UserUpdateDataController {
 
             await webSocketService.notifyClientsAboutUpdateProfile(user._id);
 
-            return res.status(200).json({ message: "User profile updated successfully" });
+            return responseHandler.ok(res, null, "User profile updated successfully");
         } catch (error) {
             console.error("Error in setUserProfile: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

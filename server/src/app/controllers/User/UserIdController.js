@@ -1,4 +1,5 @@
 const getUserDataService = require("../../services/userService/getUserDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class UserIdController {
     getUserIdData = async (req, res) => {
@@ -8,10 +9,10 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
-            const { isOAuthUser, password, refreshToken, friends, followers, following, photo_list, video_list, story_list, post_list, roles, ...otherUserProps} = user._doc;
+            const { isOAuthUser, password, refreshToken, friends, followers, following, photo_list, video_list, story_list, post_list, roles, ...otherUserProps } = user._doc;
 
             const userProps = {
                 user: {
@@ -19,10 +20,10 @@ class UserIdController {
                 },
             }
 
-            return res.status(200).json(userProps);
+            return responseHandler.ok(res, userProps);
         } catch (error) {
             console.error("Error in getUserIdData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -33,15 +34,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const userContactProps = await getUserDataService.getFormattedUserContact(user);
 
-            return res.status(200).json(userContactProps);
+            return responseHandler.ok(res, userContactProps);
         } catch (error) {
             console.error("Error in getUserIdContact: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -52,15 +53,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const userProfileProps = await getUserDataService.getFormattedUserProfile(user);
 
-            return res.status(200).json(userProfileProps);
+            return responseHandler.ok(res, userProfileProps);
         } catch (error) {
             console.error("Error in getUserIdProfile: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -71,15 +72,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const followerProps = await getUserDataService.getUserSocial(user.followers);
 
-            return res.status(200).json(followerProps)
+            return responseHandler.ok(res, followerProps);
         } catch (error) {
             console.error("Error in getUserIdFollower: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -90,15 +91,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const followingProps = await getUserDataService.getUserSocial(user.following);
 
-            return res.status(200).json(followingProps);
+            return responseHandler.ok(res, followingProps);
         } catch (error) {
             console.error("Error in getUserIdFollowing: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -109,15 +110,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const friendProps = await getUserDataService.getUserSocial(user.friends);
 
-            return res.status(200).json(friendProps);
+            return responseHandler.ok(res, friendProps);
         } catch (error) {
             console.error("Error in getUserIdFriend: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -128,15 +129,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const photoListProps = await getUserDataService.getUserPhotoList(user.photo_list);
 
-            return res.status(200).json(photoListProps);
+            return responseHandler.ok(res, photoListProps);
         } catch (error) {
             console.error("Error in getUserIdPhotoList: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -147,15 +148,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const videoListProps = await getUserDataService.getUserVideoList(user.video_list);
 
-            return res.status(200).json(videoListProps);
+            return responseHandler.ok(res, videoListProps);
         } catch (error) {
             console.error("Error in getUserIdVideoList: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -166,15 +167,15 @@ class UserIdController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             const groupListProps = await getUserDataService.getUserGroupWithoutMemberDetail(user._id);
 
-            return res.status(200).json(groupListProps);
+            return responseHandler.ok(res, groupListProps);
         } catch (error) {
             console.error("Error in getUserIdGroupList: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

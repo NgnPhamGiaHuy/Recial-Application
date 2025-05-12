@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const getUserDataService = require("../../services/userService/getUserDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class MiddlewareController {
     verifyToken = async (req, res, next) => {
@@ -8,7 +9,7 @@ class MiddlewareController {
             const accessToken = req.headers.authorization;
 
             if (!accessToken) {
-                return res.status(401).json({ error: "Access token missing" });
+                return responseHandler.unauthorized(res, "Access token missing");
             }
 
             const token = accessToken.split(" ")[1];
@@ -19,7 +20,7 @@ class MiddlewareController {
             const user = await getUserDataService.getRawUserData(userId);
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return responseHandler.notFound(res, "User not found");
             }
 
             req.user = user;
@@ -28,7 +29,7 @@ class MiddlewareController {
             return next();
         } catch (error) {
             console.error("Error in verifyToken: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     };
 

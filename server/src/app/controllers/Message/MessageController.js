@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 const WebSocketService = require("../../services/webSocketService/webSocketService");
 const createMessageService = require("../../services/messageService/createMessageService");
 const deleteMessageService = require("../../services/messageService/deleteMessageService");
@@ -11,10 +13,10 @@ class MessageController {
 
             const messageProps = await getMessageDataService.getFormattedMessageDataById(userId, message);
 
-            return res.status(200).json(messageProps);
+            return responseHandler.ok(res, messageProps);
         } catch (error) {
             console.error("Error in getMessageData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -24,11 +26,11 @@ class MessageController {
             const { message_content, message_content_url, conversation_id } = req.body;
 
             if (!conversation_id) {
-                return res.status(400).json({ error: "Message content and conversation ID are required." });
+                return responseHandler.badRequest(res, "Message content and conversation ID are required.");
             }
 
             if (!message_content && !message_content_url) {
-                return res.status(400).json({ error: "Message content URL are required." });
+                return responseHandler.badRequest(res, "Message content URL are required.");
             }
 
             const newMessage = await createMessageService.createMessageData(userId, message_content, message_content_url, conversation_id);
@@ -38,10 +40,10 @@ class MessageController {
 
             await webSocketService.notifyClientsAboutNewMessage(conversation_id, newMessage);
 
-            return res.status(200).json(newMessage);
+            return responseHandler.created(res, newMessage, "Message created successfully");
         } catch (error) {
             console.error("Error in createMessageData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -51,7 +53,7 @@ class MessageController {
             const { message_id, conversation_id } = req.query;
 
             if (!message_id || !conversation_id) {
-                return res.status(400).json({ error: "Message id or conversation id is missing" });
+                return responseHandler.badRequest(res, "Message id or conversation id is missing");
             }
 
             const deletedMessage = await deleteMessageService.deleteMessageData(userId, message_id);
@@ -61,10 +63,10 @@ class MessageController {
 
             await webSocketService.notifyClientsAboutDeleteMessage(conversation_id, deletedMessage);
 
-            return res.status(200).json(deletedMessage);
+            return responseHandler.ok(res, deletedMessage, "Message deleted successfully");
         } catch (error) {
             console.error("Error in deleteMessageData: ", error);
-            return res.status(500).json({ error: "Internal server error" });
+            return responseHandler.serverError(res);
         }
     }
 }

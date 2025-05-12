@@ -1,5 +1,6 @@
 const User = require('../../models/User');
 const Video = require('../../models/Video');
+const responseHandler = require("../../../utils/responseHandler");
 
 class VideoCreateController {
     createVideoData = async (req, res) => {
@@ -17,10 +18,10 @@ class VideoCreateController {
 
             await userData.save();
 
-            return res.status(200).json(createdVideoData);
+            return responseHandler.created(res, createdVideoData, "Video created successfully");
         } catch (error) {
             console.error("Error in createVideoData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

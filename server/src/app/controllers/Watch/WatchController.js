@@ -1,4 +1,5 @@
 const getWatchDataService = require("../../services/watchService/getWatchDataService");
+const responseHandler = require("../../../utils/responseHandler");
 
 class WatchController {
     getUserWatchData = async (req, res) => {
@@ -7,13 +8,13 @@ class WatchController {
             const watchProps = await getWatchDataService.getWatchData();
 
             if (!watchProps) {
-                return res.status(404).json({ error: "No watch props found" });
+                return responseHandler.notFound(res, "No watch props found");
             }
 
-            return res.status(200).json(watchProps);
+            return responseHandler.ok(res, watchProps);
         } catch (error) {
             console.error("Error in getUserWatchData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 
@@ -25,10 +26,10 @@ class WatchController {
 
             const watchSavedData = await getWatchDataService.getUserWatchSavedData(userId, page, watchPerPage);
 
-            return res.status(200).json(watchSavedData);
+            return responseHandler.ok(res, watchSavedData);
         } catch (error) {
             console.error("Error in getUserWatchSavedData: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

@@ -1,3 +1,5 @@
+const responseHandler = require("../../../utils/responseHandler");
+
 const getUserDataService = require("../../services/userService/getUserDataService");
 const getFriendRequestDataService = require("../../services/friendRequestService/getFriendRequestDataService");
 
@@ -9,7 +11,7 @@ class FriendRequestController {
             const friendRequestData = await getFriendRequestDataService.getRawFriendRequestDataById(requestId);
 
             if (!friendRequestData) {
-                return res.status(404).json({ error: "Friend request not found" });
+                return responseHandler.notFound(res, "Friend request not found");
             }
 
             const friendRequestProps = {
@@ -20,10 +22,10 @@ class FriendRequestController {
                 updated_at: friendRequestData.updatedAt,
             };
 
-            return res.status(200).json(friendRequestProps);
+            return responseHandler.ok(res, friendRequestProps);
         } catch (error) {
             console.error("Error in getFriendRequestById: ", error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return responseHandler.serverError(res);
         }
     }
 }

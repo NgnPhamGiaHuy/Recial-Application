@@ -9,7 +9,12 @@
     "start:local": "dotenv -e .env nodemon --inspect index.js",
     "start:production": "dotenv -e .env.production nodemon --inspect index_production.js",
     "swagger-autogen": "node ./utils/swagger-autogen.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:mock-data": "node ./utils/mock-data/cli.js generate",
+    "generate:mock-data:count": "node ./utils/mock-data/cli.js generate --count",
+    "generate:generators": "node ./utils/mock-data/cli.js create-generators",
+    "generate:user-relationships": "node ./utils/mock-data/cli.js generate-user-relationships",
+    "generate:user-settings": "node ./utils/mock-data/cli.js generate-user-settings"
   },
   "author": "",
   "license": "ISC",

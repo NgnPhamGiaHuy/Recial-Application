@@ -14,8 +14,8 @@ const GroupRequestSchema = new Schema(
             required: true,
         },
     }, {
-        timestamps: true,
-    },
+    timestamps: true,
+},
 )
 
-module.exports = mongoose.model("FriendRequest", GroupRequestSchema);
+module.exports = mongoose.model("GroupRequest", GroupRequestSchema);

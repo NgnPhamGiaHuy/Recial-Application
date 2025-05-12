@@ -19,26 +19,26 @@ const PageMemberSchema = new Schema(
                 ref: "Role",
                 required: true,
             },
-        }
+        },
     }, {
-        timestamps: true,
-    },
-)
+    timestamps: true,
+}
+);
 
-PageMemberSchema.pre("save", async function(next) {
-    if (this.isNew && !this.user_role.length) {
-        try {
-            const defaultRole = await mongoose.model("Role").findOne({ roleName: "page_contributor" });
-
+PageMemberSchema.pre("save", async function (next) {
+    try {
+        // If no user role is specified, set a default role
+        if (this.isNew && !this.user.user_role) {
+            const defaultRole = await mongoose.model("Role").findOne({ role_name: "page_contributor" });
             if (defaultRole) {
-                this.user_role.push(defaultRole._id);
+                this.user.user_role = defaultRole._id;
             }
-        } catch (error) {
-            console.error('Error while setting default role:', error);
         }
+        next();
+    } catch (error) {
+        console.error('Error while setting default role:', error);
+        next(error);
     }
-
-    next();
 });
 
-module.exports = new mongoose.model("PageMember", PageMemberSchema);
+module.exports = mongoose.model("PageMember", PageMemberSchema);

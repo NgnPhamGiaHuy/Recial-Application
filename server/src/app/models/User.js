@@ -19,30 +19,31 @@ const UserSchema = new Schema(
         ...permissionsProperties,
         ...authProperties,
     }, {
-        timestamps: true,
-    },
+    timestamps: true,
+},
 );
 
-UserSchema.pre("save", async function(next) {
-   if (this.isNew && !this.roles.length) {
-       try {
-           const defaultRole = await mongoose.model("Role").findOne({ roleName: "User" });
+UserSchema.pre("save", async function (next) {
+    try {
+        // Set default role if needed
+        if (this.isNew && !this.role) {
+            const defaultRole = await mongoose.model("Role").findOne({ role_name: "User" });
+            if (defaultRole) {
+                this.role = defaultRole._id;
+            }
+        }
 
-           if (defaultRole) {
-               this.roles.push(defaultRole._id);
-           }
-       } catch (error) {
-           console.error('Error while setting default role:', error);
-       }
-   }
+        // Clear password for OAuth users
+        if (this.isOAuthUser) {
+            this.password = '';
+        }
 
-   next();
-
-   if (this.isOAuthUser) {
-        this.password = '';
-   }
-
-   next();
+        // Call next() only once after all operations
+        next();
+    } catch (error) {
+        console.error('Error in User pre-save hook:', error);
+        next(error);
+    }
 });
 
 module.exports = mongoose.model('User', UserSchema);

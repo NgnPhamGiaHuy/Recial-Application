@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const database = require("../../config/database");
-const generateDummyData = require("../dataGenerator/index.js");
+const { connectDB } = require("../../config/database");
 
 const PORT = 8080;
 
@@ -9,8 +8,7 @@ let connectedClients = 0;
 
 const startServer = async (app, server, wss) => {
     try {
-        await database.connect();
-        // await generateDummyData();
+        await connectDB();
 
         server.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`);
